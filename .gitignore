@@ -1,0 +1,34 @@
+# Secrets — NEVER commit
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Generated artifacts
+output/
+db/*.sqlite
+db/*.db
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Markdowns
+CLAUDE.md
+SKILLS.md
+claude_code_prompt.md
+.claude/
+
+# Credentials
+.env
+
+# Requirements
+requirements.txt
