@@ -44,8 +44,8 @@ python tests/phase0_smoke_test.py
 | Phase | Name | Status |
 |---|---|---|
 | 0 | Environment & Mental Model | 🟢 Done |
-| 1 | Claims Ledger | 🟡 In Progress |
-| 2 | JD Analyzer | ⬜ Not started |
+| 1 | Claims Ledger & Resume Parsing | 🟢 Done |
+| 2 | JD Analyzer | 🟡 In Progress |
 | 3 | Resume Tailor + Fabrication Auditor | ⬜ Not started |
 | 4 | Voice Profiler | ⬜ Not started |
 | 5 | Cover Letter Drafter | ⬜ Not started |
@@ -54,4 +54,3 @@ python tests/phase0_smoke_test.py
 | 8 | Streamlit Frontend | ⬜ Not started |
 | 9 | Google Drive MCP (stretch) | ⬜ Not started |
 | 10 | Gmail MCP (stretch) | ⬜ Not started |
-
