@@ -136,6 +136,13 @@ def count_claims() -> int:
         return conn.execute("SELECT COUNT(*) FROM claim").fetchone()[0]
 
 
+def delete_all_claims() -> int:
+    """Delete every row from the claim table. Returns the number deleted."""
+    with _connect() as conn:
+        cur = conn.execute("DELETE FROM claim")
+        return cur.rowcount
+
+
 def _cli() -> None:
     """Tiny dispatcher for `python -m src.ledger.db {init|count}`."""
     if len(sys.argv) < 2 or sys.argv[1] not in {"init", "count"}:

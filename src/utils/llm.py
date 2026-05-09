@@ -63,11 +63,16 @@ def call_llm(
     max_tokens: int = 1024,
     max_retries: int = 3,
     response_schema: type | None = None,
+    thinking_budget: int | None = None,
 ) -> LLMResponse:
     """Single-turn LLM call with retries on transient errors.
 
     Pass `response_schema` (a Pydantic model class) to force JSON output
     constrained to that schema. The returned `text` will be valid JSON.
+
+    Pass `thinking_budget=0` to disable Gemini 2.5's internal reasoning,
+    which otherwise consumes tokens from `max_tokens` before any visible
+    output is emitted.
     """
     client = _client()
     last_err: Exception | None = None
@@ -79,6 +84,10 @@ def call_llm(
     if response_schema is not None:
         config_kwargs["response_mime_type"] = "application/json"
         config_kwargs["response_schema"] = response_schema
+    if thinking_budget is not None:
+        config_kwargs["thinking_config"] = types.ThinkingConfig(
+            thinking_budget=thinking_budget
+        )
 
     for attempt in range(max_retries):
         try:
