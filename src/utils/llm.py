@@ -1,13 +1,12 @@
 """
 Thin wrapper around the Google GenAI SDK (Gemini).
 
-WHY this file exists:
+MOST Important file.
 We can invoke models directly from every sub-agent. We don't, for these reasons:
 
   1. ONE place to configure model IDs. SSoT - swapping models later will require minimal change.
   2. ONE place for retry/error handling. Rate limits and transient 5xx (mostly 504 - Gateway Timeout) errors get handled here so sub-agents stay focused on their own logic.
   3. ONE place for cost/quota logging.
-
 """
 
 from __future__ import annotations
@@ -63,34 +62,30 @@ def call_llm(
     user: str,
     max_tokens: int = 1024,
     max_retries: int = 3,
+    response_schema: type | None = None,
 ) -> LLMResponse:
-    """
-    Single-turn LLM call with basic retry on rate limits / transient errors.
+    """Single-turn LLM call with retries on transient errors.
 
-    Why retries: Google occasionally returns 429 (rate limit / quota exhausted)
-    or 5xx (server side). These are transient. Without retry, your pipeline
-    dies on a hiccup. With exponential backoff, it heals itself. This is
-    defensive coding 101 for any code that talks to a network service.
-
-    Why keyword-only args (the `*,`): with this many parameters, positional
-    args become unreadable. Forcing keywords makes call sites self-documenting.
-
-    Note on the API shape: in the Google GenAI SDK, the system prompt is
-    NOT a separate "role" like in Anthropic/OpenAI — it goes into
-    `config.system_instruction`. The user message is passed as `contents`.
+    Pass `response_schema` (a Pydantic model class) to force JSON output
+    constrained to that schema. The returned `text` will be valid JSON.
     """
     client = _client()
     last_err: Exception | None = None
+
+    config_kwargs: dict[str, object] = {
+        "system_instruction": system,
+        "max_output_tokens": max_tokens,
+    }
+    if response_schema is not None:
+        config_kwargs["response_mime_type"] = "application/json"
+        config_kwargs["response_schema"] = response_schema
 
     for attempt in range(max_retries):
         try:
             resp = client.models.generate_content(
                 model=model,
                 contents=user,
-                config=types.GenerateContentConfig(
-                    system_instruction=system,
-                    max_output_tokens=max_tokens,
-                ),
+                config=types.GenerateContentConfig(**config_kwargs),
             )
             # `resp.text` pulls the text out of
             # resp.candidates[0].content.parts[0].text for us.
