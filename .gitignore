@@ -30,8 +30,5 @@ claude_code_prompt.md
 # Credentials
 .env
 
-# Requirements
-requirements.txt
-
 # Master Resume
 data/master_resume.txt
