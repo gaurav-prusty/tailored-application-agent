@@ -8,3 +8,5 @@ python-dotenv>=1.0.0
 sqlite-utils>=3.35
 httpx>=0.27.0
 beautifulsoup4>=4.12.0
+# brotli — decompresses `br`-encoded responses; httpx needs this to decode them.
+brotli>=1.1.0
