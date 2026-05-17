@@ -1,0 +1,12 @@
+google-genai>=0.3.0
+
+# phase 6: LangGraph for building the agent's reasoning graph and visualizing it.
+langgraph>=0.2.0
+
+# Loads .env into os.environ so we don't hardcode the API key in source.
+python-dotenv>=1.0.0
+sqlite-utils>=3.35
+httpx>=0.27.0
+beautifulsoup4>=4.12.0
+# brotli — decompresses `br`-encoded responses; httpx needs this to decode them.
+brotli>=1.1.0
