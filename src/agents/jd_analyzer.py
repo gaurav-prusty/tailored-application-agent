@@ -173,19 +173,53 @@ Map years roughly: 0 → intern; 0–2 → junior; 2–5 → mid; 5–8 → seni
 8–12 → lead; 12+ → principal. Adjust if scope language overrides.
 
 KEYWORDS
-Distinct from skills. A keyword is any high-signal term an ATS would search
-for that isn't already in required_skills or preferred_skills:
-  - company stage / business model: "B2B SaaS", "Series B", "fintech"
-  - domain terms: "data warehousing", "regulated industry", "FedRAMP"
-  - methodology terms: "agile", "TDD", "platform engineering"
-Avoid duplicating items from required_skills / preferred_skills.
-Cap at ~10 — only the highest-signal terms.
+Search-engine terms an ATS or recruiter would use to find this role. Test
+each candidate with two questions:
+  Q1: Would a job-seeker ever search this term to find roles like this one?
+  Q2: Does it appear in tens of thousands of unrelated job postings?
+A keyword passes only if Q1 is YES and Q2 is NO.
+
+ALLOWED categories:
+  - Industry vertical: "financial services", "banking", "healthcare", "fintech"
+  - Company stage / model: "B2B SaaS", "Series B", "enterprise software"
+  - Domain specialty: "data warehousing", "high-frequency trading", "FedRAMP"
+  - Named methodology: "agile", "TDD", "platform engineering"
+
+EXCLUDED (do not emit, even if they appear in the JD):
+  - Generic role categories: "Software Engineering", "Engineering", "Developer"
+  - Internal team / product / business-unit names: "Consumer Banking Deposits
+    Team", "Platform Group", "Core Infrastructure" — these are not in ATS
+    keyword lists.
+  - Skills already in required_skills or preferred_skills
+
+Always include the company's industry vertical if identifiable from the JD
+or company name (JPMorgan → "banking" + "financial services"; a hospital
+chain → "healthcare"). Cap output at ~10 highest-signal items.
 
 CULTURE CUES
-Concrete, specific phrases — not generic adjectives. Include things like:
-  "remote-first", "async-first", "fast-paced startup", "ownership culture",
-  "in-office 5 days", "individual contributor track"
-Exclude empty filler: "great team", "exciting opportunity", "collaborative".
+The field exists to surface concrete TRADEOFFS that affect day-to-day work
+life — not VALUES the company claims to hold. Values are marketing copy;
+tradeoffs are actionable signal.
+
+A culture_cue must describe a CONDITION OF WORK, answering one of:
+  - Where do I work?         "remote-first", "in-office 5 days", "hybrid (NYC)"
+  - How do I work?           "async-first", "deep-work culture", "no meetings Wednesdays"
+  - Who do I report to?      "flat hierarchy", "individual contributor track"
+  - What's the pace?         "fast-paced startup", "ships daily", "weekly release cycle"
+  - What does ownership mean? "you own end-to-end", "rotating on-call"
+
+DO NOT emit anything that's a VALUE STATEMENT, even if the JD prominently
+states it. Values describe what the company aspires to; they tell you
+nothing about your day. The following are always values, never tradeoffs:
+  - Any phrase containing: "diversity", "inclusion", "equity", "belonging",
+    "respect", "integrity", "excellence", "ownership" (as a virtue, vs.
+    "you own end-to-end" which is a tradeoff), "passion", "innovation",
+    "we value", "we believe", "committed to", "culture of <adjective>".
+  - Generic praise: "great team", "exciting opportunity", "collaborative",
+    "supportive environment", "growth-minded".
+
+If a JD has no concrete tradeoffs and only value statements, return [].
+An empty list is the correct answer when there's no real signal.
 
 RED FLAGS
 Real warning signs, not boilerplate. Include things like:
