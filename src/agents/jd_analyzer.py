@@ -11,7 +11,10 @@
 from __future__ import annotations
 
 import json
+import sys
+from pathlib import Path
 from typing import Literal
+from urllib.parse import urlparse
 
 import httpx
 from bs4 import BeautifulSoup
@@ -255,3 +258,58 @@ def analyze_jd(jd_text: str) -> tuple[JDAnalysis, LLMResponse]:
         return JDAnalysis.model_validate(raw), response
     except ValidationError as e:
         raise RuntimeError(f"LLM output failed schema validation: {e}") from e
+
+
+def _is_url(s: str) -> bool:
+    """True if s parses as an http(s) URL."""
+    try:
+        return urlparse(s).scheme in ("http", "https")
+    except ValueError:
+        return False
+
+
+def _load_jd(arg: str) -> tuple[str, str]:
+    """Return (jd_text, source_label). Auto-routes URL vs path."""
+    if _is_url(arg):
+        return fetch_jd(arg), "url"
+    p = Path(arg)
+    if not p.is_file():
+        raise FileNotFoundError(
+            f"'{arg}' is neither a valid URL nor an existing file path."
+        )
+    return p.read_text(encoding="utf-8"), "path"
+
+
+def _cli() -> None:
+    """`python -m src.agents.jd_analyzer <url-or-path>`."""
+    args = sys.argv[1:]
+    if not args or args[0] in {"-h", "--help"}:
+        print(
+            "usage: python -m src.agents.jd_analyzer <url-or-path>",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+
+    arg = args[0]
+    try:
+        jd_text, source = _load_jd(arg)
+    except JDFetchError as e:
+        print(f"\n[fetch failed] {e}", file=sys.stderr)
+        sys.exit(1)
+    except FileNotFoundError as e:
+        print(f"\n[error] {e}", file=sys.stderr)
+        sys.exit(1)
+
+    analysis, response = analyze_jd(jd_text)
+
+    print("\n=== JD Analysis ===\n")
+    print(analysis.model_dump_json(indent=2))
+    print("\n--- Usage ---")
+    print(f"  source: {source} ({arg})")
+    print(f"  input:  {response.input_tokens} tokens")
+    print(f"  output: {response.output_tokens} tokens")
+    print("  cost:   $0.00 (Gemini free tier)")
+
+
+if __name__ == "__main__":
+    _cli()
