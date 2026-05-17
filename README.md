@@ -45,8 +45,8 @@ python tests/phase0_smoke_test.py
 |---|---|---|
 | 0 | Environment & Mental Model | 🟢 Done |
 | 1 | Claims Ledger & Resume Parsing | 🟢 Done |
-| 2 | JD Analyzer | 🟡 In Progress |
-| 3 | Resume Tailor + Fabrication Auditor | ⬜ Not started |
+| 2 | JD Analyzer | 🟢 Done |
+| 3 | Resume Tailor + Fabrication Auditor | 🟡 In Progress |
 | 4 | Voice Profiler | ⬜ Not started |
 | 5 | Cover Letter Drafter | ⬜ Not started |
 | 6 | LangGraph Orchestration | ⬜ Not started |
