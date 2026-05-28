@@ -14,14 +14,14 @@ Six sub-agents orchestrated by LangGraph:
 | Sub-agent | Model | Role |
 |---|---|---|
 | JD Analyzer | Gemini 2.5 Flash | Extracts requirements, keywords, seniority, culture cues |
-| Resume Tailor | Gemini 2.5 Pro | Reorders/rewords bullets against JD — never invents |
-| Voice Profiler | Gemini 2.5 Pro | Builds style fingerprint from writing samples |
-| Letter Drafter | Gemini 2.5 Pro | Writes in that voice, not generic LLM voice |
+| Resume Tailor | Gemini 2.5 Flash (thinking on) | Reorders/rewords bullets against JD — never invents |
+| Voice Profiler | Gemini 2.5 Flash (thinking on) | Builds style fingerprint from writing samples |
+| Letter Drafter | Gemini 2.5 Flash (thinking on) | Writes in that voice, not generic LLM voice |
 | Field Mapper | Gemini 2.5 Flash | JSON of likely application form fields with answers |
-| Fabrication Auditor | Gemini 2.5 Pro | Diffs output against claims ledger; halts on hallucination |
+| Fabrication Auditor | Gemini 2.5 Flash (thinking on) | Diffs output against claims ledger; halts on hallucination |
 
 ## Stack - Tentative
-- **Google GenAI SDK** (Gemini 2.5 Pro + Flash, free tier via AI Studio)
+- **Google GenAI SDK** (Gemini 2.5 Flash, free tier via AI Studio)
 - **LangGraph** (state graph, conditional edges, checkpointing)
 - **SQLite** (claims ledger, voice profile cache)
 - **python-docx** (ATS-compatible resume output)

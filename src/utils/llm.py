@@ -23,13 +23,10 @@ from google.genai import types
 # Load API key from .env file.
 load_dotenv()
 
-# Cost-tier reference:
-#   - FLASH -> classification, extraction, structured JSON. Cheap and fast.
-#              Generous free-tier quota (~hundreds of requests/day).
-#   - PRO   -> writing-quality work: resume tailoring, cover letters, auditing.
-#              Tighter free-tier quota — use deliberately, not by default.
+# Every sub-agent runs on Flash. Pro is paid-only on Gemini's free tier as of
+# 2026-05. Pass thinking_budget=0 for extraction/classification; leave it at
+# default (None) for writing/judgment tasks that need reasoning.
 MODEL_FLASH = "gemini-2.5-flash"
-MODEL_PRO = "gemini-2.5-pro"
 
 
 @dataclass
